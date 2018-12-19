@@ -2,7 +2,7 @@ import live2d from './live2d'
 
 const live2d_vue = {
     install(Vue) {
-        Vue.component('Live2d', live2d)
+        Vue.component('live2d', live2d)
     }
 }
 

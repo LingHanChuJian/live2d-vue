@@ -1,11 +1,11 @@
 {
   "name": "live2d-vue",
   "description": "live2d vue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "LingHanChuJian",
   "license": "MIT",
   "private": false,
-  "main": "dist/index.js",
+  "main": "dist/live2d-vue.common.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

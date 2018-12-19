@@ -10,22 +10,22 @@ export default {
   name: "live2d",
   props:{
     width:{
+      type: Number,
       default: 280
     },
     height:{
+      type: Number,
       default: 250
     },
     canvasID:{
+      type: String,
       default: uuid()
     },
-    modelPath: String,
-    cross: {
-      default: false
-    }
+    modelPath: String
   },
   mounted(){
     initL2dCanvas(this.canvasID)
-    init(this.modelPath,this.cross)
+    init(this.modelPath)
   }
 }
 </script>
