@@ -29,3 +29,5 @@ export  default  {
 
 ## 关于模型
 Pio目录模型参考
+
+![药水制作师](https://raw.githubusercontent.com/LingHanChuJian/live2d-vue/master/public/live2d.png)
