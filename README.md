@@ -22,10 +22,10 @@ export  default  {
 </script>
 ```
 ## api
-**:width 宽度  默认  280**
-**:height  高度 默认  250**
-**:canvasID  标签id 默认 uuid()**
-**:modelPath  live2d模型配置json**
+**:width 宽度  默认  280**  
+**:height  高度 默认  250**  
+**:canvasID  标签id 默认 uuid()**  
+**:modelPath  live2d模型配置json**  
 
 ## 关于模型
 Pio目录模型参考
