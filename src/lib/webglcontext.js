@@ -1,10 +1,9 @@
 let context
 
 export const setContext = webglContext => {
-    context = webglContext
+  context = webglContext
 }
 
 export const getContext = () => {
-    return context
+  return context
 }
-
