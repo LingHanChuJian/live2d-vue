@@ -1,6 +1,6 @@
 ## 关于live2d-vue二三事
-1.live2d-vue 参考资料 [EYHN](https://github.com/EYHN/hexo-helper-live2d) 以及[Jad](https://github.com/journey-ad/live2d_src)
-2.在这基础上加上一些魔法值 live2d-vue 就完成了
+ 1. live2d-vue 参考资料 [EYHN](https://github.com/EYHN/hexo-helper-live2d) 以及[Jad](https://github.com/journey-ad/live2d_src)
+ 2. 在这基础上加上一些魔法值 live2d-vue 就完成了
 
 ## 食用方法
 ```
