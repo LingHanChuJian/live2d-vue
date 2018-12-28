@@ -1,7 +1,7 @@
 {
   "name": "live2d-vue",
   "description": "live2d vue",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "author": "LingHanChuJian",
   "license": "MIT",
   "private": false,
@@ -12,17 +12,19 @@
     "lint": "vue-cli-service lint",
     "build-bundle": "vue-cli-service build --target lib --name live2d-vue ./src/components/index.js"
   },
-  "keywords":[
+  "keywords": [
     "live2d",
     "live2d-vue"
   ],
-  "bugs":{
+  "bugs": {
     "url": "https://github.com/LingHanChuJian/live2d-vue/issues"
   },
   "homepage": "https://github.com/LingHanChuJian/live2d-vue",
   "dependencies": {
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
     "uuid": "^3.3.2",
     "vue": "^2.5.17"
   },

@@ -6,13 +6,13 @@ import { logInfo } from './log'
 
 class LAppLive2DManager {
   constructor () {
-        // logInfo("--> LAppLive2DManager()")
+    // logInfo("--> LAppLive2DManager()")
     this.models = []
 
     this.count = -1
     this.reloadFlg = false
 
-        // Live2D.init()
+    // Live2D.init()
     Live2DFramework.setPlatformManager(new PlatformManager())
   }
 

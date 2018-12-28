@@ -97,19 +97,6 @@ class PlatformManager {
     }
     return JSON.parse(jsonStr)
   }
-
-  getWebGLContext (canvas) {
-    let NAMES = ['webgl', 'experimental-webgl', 'webkit-3d', 'moz-webgl']
-    for (let i = 0; i < NAMES.length; i++) {
-      try {
-        let ctx = canvas.getContext(NAMES[i], { premultipliedAlpha: true })
-        if (ctx) return ctx
-      } catch (e) {
-        logError(`getWebGLContext : ${e}`)
-      }
-    }
-    return null
-  }
 }
 
 export default PlatformManager
