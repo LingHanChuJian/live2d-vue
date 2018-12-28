@@ -167,7 +167,7 @@ export default {
 #### `:minWidth` 最小展示宽度
 >默认 18
 
-#### `:position` 位置
+#### `:position` 位置 'left' 'right'
 >默认 'left'
 
 #### `:customDialogue` 
@@ -185,7 +185,6 @@ export default {
 #### `:tabMsg` 标签描述
 >默认 undefined
 
-
 ## 关于模型
 
 [Pio目录模型参考](https://github.com/LingHanChuJian/live2d-vue/tree/master/Pio)
@@ -193,5 +192,7 @@ export default {
 如何制作 [live2d模型](https://imjad.cn/archives/lab/add-dynamic-poster-girl-with-live2d-to-your-blog-02)
 
 ![药水制作师](https://raw.githubusercontent.com/LingHanChuJian/live2d-vue/master/public/live2d.png)
+
 ![药水制作师](https://raw.githubusercontent.com/LingHanChuJian/live2d-vue/master/public/live2d-1.png)
+
 ![药水制作师](https://raw.githubusercontent.com/LingHanChuJian/live2d-vue/master/public/live2d-2.png)
