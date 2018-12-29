@@ -57,19 +57,23 @@ class message {
         for (let itemMouseover of elMouseover) {
             for (let iMouseover = 0, lenMouseover = itemMouseover.selector.length; iMouseover < lenMouseover; iMouseover++) {
                 let selectorMouseover = document.querySelector(itemMouseover.selector[iMouseover])
-                selectorMouseover.removeEventListener('mouseenter', () => showCallback(itemMouseover.message))
-                selectorMouseover.addEventListener('mouseenter', () => showCallback(itemMouseover.message))
-                selectorMouseover.removeEventListener('mouseleave', () => hideCallback())
-                selectorMouseover.addEventListener('mouseleave', () => hideCallback())
+                if (selectorMouseover) {
+                    selectorMouseover.removeEventListener('mouseenter', () => showCallback(itemMouseover.message))
+                    selectorMouseover.addEventListener('mouseenter', () => showCallback(itemMouseover.message))
+                    selectorMouseover.removeEventListener('mouseleave', () => hideCallback())
+                    selectorMouseover.addEventListener('mouseleave', () => hideCallback())
+                }
             }
         }
         for (let itemClick of elClick) {
             for (let iClick = 0, lenClick = itemClick.selector.length; iClick < lenClick; iClick++) {
                 let selectorClick = document.querySelector(itemClick.selector[iClick])
-                selectorClick.removeEventListener('click', () => showCallback(itemClick.message))
-                selectorClick.addEventListener('click', () => showCallback(itemClick.message))
-                selectorClick.removeEventListener('mouseleave', () => hideCallback())
-                selectorClick.addEventListener('mouseleave', () => hideCallback())
+                if (selectorClick) {
+                    selectorClick.removeEventListener('click', () => showCallback(itemClick.message))
+                    selectorClick.addEventListener('click', () => showCallback(itemClick.message))
+                    selectorClick.removeEventListener('mouseleave', () => hideCallback())
+                    selectorClick.addEventListener('mouseleave', () => hideCallback())
+                }
             }
         }
     }

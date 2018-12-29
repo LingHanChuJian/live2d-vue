@@ -34,6 +34,7 @@ class tools {
             this.parent.innerHTML = ''
             this.parent.style.fontSize = '13px'
             this.parent.style.writingMode = 'initial'
+            this.parent.style.lineHeight = '20px'
         }
     }
 
@@ -72,7 +73,8 @@ class tools {
         this.clearTimer()
         if (Array.isArray(message))
             message = message[this.message.randomInteger(message.length - 1)]
-        this.parent.innerHTML = message
+        if(this.parent.style.fontSize)
+        this.parent.innerHTML = this.createElementStr(message)
         this.showHover()
     }
 
@@ -86,6 +88,10 @@ class tools {
             clearTimeout(this.control)
             this.control = ''
         }
+    }
+
+    createElementStr(message){
+        return `<div style="text-align: left;display: inline-block;">${message}</div>`
     }
 }
 

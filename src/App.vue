@@ -32,7 +32,9 @@ export default {
         .then(res => res.json())
         .then(data => {
           if(!this.isDialogue){
-              this.$refs.tool[1].showMessage(data.hitokoto)
+            let tool = this.$refs.tool.filter(item => { return item.customDialogue })
+            if(tool && tool.length > 0)
+              tool[0].showMessage(data.hitokoto)
           }else{
             this.$refs.dialogue.showMessage(data.hitokoto)
           }
