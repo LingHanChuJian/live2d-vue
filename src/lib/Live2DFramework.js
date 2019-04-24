@@ -14,7 +14,7 @@ import { logError, logWarn } from './log'
 let texCounter = 0
 
 class L2DBaseModel {
-  constructor () {
+  constructor() {
     this.live2DModel = null // ALive2DModel
     this.modelMatrix = null // L2DModelMatrix
     this.eyeBlink = null // L2DEyeBlink
@@ -40,73 +40,73 @@ class L2DBaseModel {
     this.isTexLoaded = false
   }
 
-  getModelMatrix () {
+  getModelMatrix() {
     return this.modelMatrix
   }
 
-  setAlpha (a/* float */) {
+  setAlpha(a/* float */) {
     if (a > 0.999) a = 1
     if (a < 0.001) a = 0
     this.alpha = a
   }
 
-  getAlpha () {
+  getAlpha() {
     return this.alpha
   }
 
-  isInitialized () {
+  isInitialized() {
     return this.initialized
   }
 
-  setInitialized (v/* boolean */) {
+  setInitialized(v/* boolean */) {
     this.initialized = v
   }
 
-  isUpdating () {
+  isUpdating() {
     return this.updating
   }
 
-  setUpdating (v/* boolean */) {
+  setUpdating(v/* boolean */) {
     this.updating = v
   }
 
-  getLive2DModel () {
+  getLive2DModel() {
     return this.live2DModel
   }
 
-  setLipSync (v/* boolean */) {
+  setLipSync(v/* boolean */) {
     this.lipSync = v
   }
 
-  setLipSyncValue (v/* float */) {
+  setLipSyncValue(v/* float */) {
     this.lipSyncValue = v
   }
 
-  setAccel (x/* float */, y/* float */, z/* float */) {
+  setAccel(x/* float */, y/* float */, z/* float */) {
     this.accelX = x
     this.accelY = y
     this.accelZ = z
   }
 
-  setDrag (x/* float */, y/* float */) {
+  setDrag(x/* float */, y/* float */) {
     this.dragX = x
     this.dragY = y
   }
 
-  getMainMotionManager () {
+  getMainMotionManager() {
     return this.mainMotionManager
   }
 
-  getExpressionManager () {
+  getExpressionManager() {
     return this.expressionManager
   }
 
-  loadModelData (path/* String */, callback) {
-        /*
-            if( this.live2DModel != null ) {
-                this.live2DModel.deleteTextures();
-            }
-        */
+  loadModelData(path/* String */, callback) {
+    /*
+        if( this.live2DModel != null ) {
+            this.live2DModel.deleteTextures();
+        }
+    */
     let pm = Live2DFramework.getPlatformManager() // IPlatformManager
     if (this.debugMode) pm.log(`Load model : ${path}`)
 
@@ -115,7 +115,7 @@ class L2DBaseModel {
       thisRef.live2DModel = l2dModel
       thisRef.live2DModel.saveParam()
 
-            let _err = Live2D.getError() // eslint-disable-line
+      let _err = Live2D.getError() // eslint-disable-line
 
       if (_err !== 0) {
         logError('Error : Failed to loadModelData().')
@@ -123,15 +123,15 @@ class L2DBaseModel {
       }
 
       thisRef.modelMatrix = new L2DModelMatrix(
-                thisRef.live2DModel.getCanvasWidth(),
-                thisRef.live2DModel.getCanvasHeight()) // L2DModelMatrix
+        thisRef.live2DModel.getCanvasWidth(),
+        thisRef.live2DModel.getCanvasHeight()) // L2DModelMatrix
       thisRef.modelMatrix.setWidth(2)
       thisRef.modelMatrix.setCenterPosition(0, 0)
       callback(thisRef.live2DModel)
     })
   }
 
-  loadTexture (no/* int */, path/* String */, callback) {
+  loadTexture(no/* int */, path/* String */, callback) {
     texCounter++
 
     let pm = Live2DFramework.getPlatformManager() // IPlatformManager
@@ -146,7 +146,7 @@ class L2DBaseModel {
     })
   }
 
-  loadMotion (name/* String */, path /* String */, callback) {
+  loadMotion(name/* String */, path /* String */, callback) {
     let pm = Live2DFramework.getPlatformManager() // IPlatformManager
 
     if (this.debugMode) pm.log(`Load Motion : ${path}`)
@@ -155,7 +155,7 @@ class L2DBaseModel {
 
     let thisRef = this
     pm.loadBytes(path, buf => {
-            motion = Live2DMotion.loadMotion(buf) // eslint-disable-line
+      motion = Live2DMotion.loadMotion(buf) // eslint-disable-line
       if (name != null) {
         thisRef.motions[name] = motion
       }
@@ -163,7 +163,7 @@ class L2DBaseModel {
     })
   }
 
-  loadExpression (name/* String */, path /* String */, callback) {
+  loadExpression(name/* String */, path /* String */, callback) {
     let pm = Live2DFramework.getPlatformManager() // IPlatformManager
 
     if (this.debugMode) pm.log(`Load Expression : ${path}`)
@@ -177,7 +177,7 @@ class L2DBaseModel {
     })
   }
 
-  loadPose (path /* String */, callback) {
+  loadPose(path /* String */, callback) {
     let pm = Live2DFramework.getPlatformManager() // IPlatformManager
     if (this.debugMode) pm.log(`Load Pose : ${path}`)
     let thisRef = this
@@ -191,7 +191,7 @@ class L2DBaseModel {
     }
   }
 
-  loadPhysics (path/* String */) {
+  loadPhysics(path/* String */) {
     let pm = Live2DFramework.getPlatformManager() // IPlatformManager
     if (this.debugMode) pm.log(`Load Physics : ${path}`)
     let thisRef = this
@@ -204,7 +204,7 @@ class L2DBaseModel {
     }
   }
 
-  hitTestSimple (drawID, testX, testY) {
+  hitTestSimple(drawID, testX, testY) {
     if (this.live2DModel === null) return !1
 
     let drawIndex = this.live2DModel.getDrawDataIndex(drawID)
@@ -227,8 +227,9 @@ class L2DBaseModel {
     return (left <= tx && tx <= right && top <= ty && ty <= bottom)
   }
 
-  hitTestSimpleCustom (x, y, testX, testY) {
-    if (this.live2DModel === null) return !1
+  hitTestSimpleCustom(x, y, testX, testY) {
+    if (this.live2DModel === null) return false
+    if (!x || !y) return false
     if (testX >= x[0] && testX <= y[0]) {
       if (testY <= x[1] && testY >= y[1]) { return true }
     }
@@ -251,24 +252,24 @@ class L2DBaseModel {
 // ============================================================
 
 class L2DExpressionMotion extends AMotion { // eslint-disable-line
-  constructor () {
+  constructor() {
     super()
     this.paramList = []
   }
 
-    updateParamExe(model /*ALive2DModel*/, timeMSec/*long*/, weight /*float*/, motionQueueEnt /*MotionQueueEnt*/) { // eslint-disable-line
-      for (let i = this.paramList.length - 1; i >= 0; --i) {
-        let param = this.paramList[i] // L2DExpressionParam
-            // if (!param || !param.type) continue
-        if (param.type === L2DExpressionMotion.TYPE_ADD) {
-          model.addToParamFloat(param.id, param.value, weight)
-        } else if (param.type === L2DExpressionMotion.TYPE_MULT) {
-          model.multParamFloat(param.id, param.value, weight)
-        } else if (param.type === L2DExpressionMotion.TYPE_SET) {
-          model.setParamFloat(param.id, param.value, weight)
-        }
+  updateParamExe(model /*ALive2DModel*/, timeMSec/*long*/, weight /*float*/, motionQueueEnt /*MotionQueueEnt*/) { // eslint-disable-line
+    for (let i = this.paramList.length - 1; i >= 0; --i) {
+      let param = this.paramList[i] // L2DExpressionParam
+      // if (!param || !param.type) continue
+      if (param.type === L2DExpressionMotion.TYPE_ADD) {
+        model.addToParamFloat(param.id, param.value, weight)
+      } else if (param.type === L2DExpressionMotion.TYPE_MULT) {
+        model.multParamFloat(param.id, param.value, weight)
+      } else if (param.type === L2DExpressionMotion.TYPE_SET) {
+        model.setParamFloat(param.id, param.value, weight)
       }
     }
+  }
 }
 
 L2DExpressionMotion.EXPRESSION_DEFAULT = 'DEFAULT'
@@ -332,7 +333,7 @@ L2DExpressionMotion.loadJson = buf => {
 // ============================================================
 
 class L2DExpressionParam {
-  constructor () {
+  constructor() {
     this.id = ''
     this.type = -1
     this.value = null
@@ -354,7 +355,7 @@ class L2DExpressionParam {
 // ============================================================
 
 class L2DEyeBlink {
-  constructor () {
+  constructor() {
     this.nextBlinkTime = null /* TODO NOT INIT */
     this.stateStartTime = null /* TODO NOT INIT */
     this.blinkIntervalMsec = null /* TODO NOT INIT */
@@ -368,24 +369,24 @@ class L2DEyeBlink {
     this.eyeID_R = 'PARAM_EYE_R_OPEN'
   }
 
-  calcNextBlink () {
-        let time /*long*/ = UtSystem.getUserTimeMSec() // eslint-disable-line
+  calcNextBlink() {
+    let time /*long*/ = UtSystem.getUserTimeMSec() // eslint-disable-line
     let r /* Number */ = Math.random()
     return  /* (long) */ (time + r * (2 * this.blinkIntervalMsec - 1))
   }
 
-  setInterval (blinkIntervalMsec /* int */) {
+  setInterval(blinkIntervalMsec /* int */) {
     this.blinkIntervalMsec = blinkIntervalMsec
   }
 
-  setEyeMotion (closingMotionMsec/* int */, closedMotionMsec/* int */, openingMotionMsec/* int */) {
+  setEyeMotion(closingMotionMsec/* int */, closedMotionMsec/* int */, openingMotionMsec/* int */) {
     this.closingMotionMsec = closingMotionMsec
     this.closedMotionMsec = closedMotionMsec
     this.openingMotionMsec = openingMotionMsec
   }
 
-  updateParam (model/* ALive2DModel */) {
-        let time /*:long*/ = UtSystem.getUserTimeMSec() // eslint-disable-line
+  updateParam(model/* ALive2DModel */) {
+    let time /*:long*/ = UtSystem.getUserTimeMSec() // eslint-disable-line
     let eyeParamValue /*: Number */
     let t /*: Number */ = 0
     switch (this.eyeState) {
@@ -458,76 +459,76 @@ EYE_STATE.STATE_OPENING = 'STATE_OPENING'
 // ============================================================
 
 class L2DMatrix44 {
-  constructor () {
+  constructor() {
     this.tr = new Float32Array(16)
     this.identity()
   }
 
-  identity () {
+  identity() {
     for (let i/*: int */ = 0; i < 16; i++) { this.tr[i] = ((i % 5) === 0) ? 1 : 0 }
   }
 
-  getArray () {
+  getArray() {
     return this.tr
   }
 
-  getCopyMatrix () {
+  getCopyMatrix() {
     return new Float32Array(this.tr) // this.tr.clone()
   }
 
-  setMatrix (tr/* float[] */) {
+  setMatrix(tr/* float[] */) {
     if (this.tr == null || this.tr.length !== this.tr.length) return
     for (let i/*: int */ = 0; i < 16; i++) this.tr[i] = tr[i]
   }
 
-  getScaleX () {
+  getScaleX() {
     return this.tr[0]
   }
 
-  getScaleY () {
+  getScaleY() {
     return this.tr[5]
   }
 
-  transformX (src/* float */) {
+  transformX(src/* float */) {
     return this.tr[0] * src + this.tr[12]
   }
 
-  transformY (src/* float */) {
+  transformY(src/* float */) {
     return this.tr[5] * src + this.tr[13]
   }
 
-  invertTransformX (src/* float */) {
+  invertTransformX(src/* float */) {
     return (src - this.tr[12]) / this.tr[0]
   }
 
-  invertTransformY (src/* float */) {
+  invertTransformY(src/* float */) {
     return (src - this.tr[13]) / this.tr[5]
   }
 
-  multTranslate (shiftX/* float */, shiftY/* float */) {
+  multTranslate(shiftX/* float */, shiftY/* float */) {
     let tr1 = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, shiftX, shiftY, 0, 1]
     L2DMatrix44.mul(tr1, this.tr, this.tr)
   }
 
-  translate (x/* float */, y/* float */) {
+  translate(x/* float */, y/* float */) {
     this.tr[12] = x
     this.tr[13] = y
   }
 
-  translateX (x/* float */) {
+  translateX(x/* float */) {
     this.tr[12] = x
   }
 
-  translateY (y/* float */) {
+  translateY(y/* float */) {
     this.tr[13] = y
   }
 
-  multScale (scaleX/* float */, scaleY/* float */) {
+  multScale(scaleX/* float */, scaleY/* float */) {
     let tr1 = [scaleX, 0, 0, 0, 0, scaleY, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
     L2DMatrix44.mul(tr1, this.tr, this.tr)
   }
 
-  scale (scaleX/* float */, scaleY/* float */) {
+  scale(scaleX/* float */, scaleY/* float */) {
     this.tr[0] = scaleX
     this.tr[5] = scaleY
   }
@@ -564,67 +565,67 @@ L2DMatrix44.mul = (a/* float[] */, b/* float[] */, dst/* float[] */) => {
 // ============================================================
 
 class L2DModelMatrix extends L2DMatrix44 {
-  constructor (w/* float */, h/* float */) {
+  constructor(w/* float */, h/* float */) {
     super()
     this.width = w
     this.height = h
   }
 
-  setPosition (x/* float */, y/* float */) {
+  setPosition(x/* float */, y/* float */) {
     let w = this.width * this.getScaleX()
     let h = this.height * this.getScaleY()
     this.translate(x - w / 2, y - h / 2)
   }
 
-  setCenterPosition (x/* float */, y/* float */) {
+  setCenterPosition(x/* float */, y/* float */) {
     let w = this.width * this.getScaleX()
     let h = this.height * this.getScaleY()
     this.translate(x - w / 2, y - h / 2)
   }
 
-  top (y/* float */) {
+  top(y/* float */) {
     this.setY(y)
   }
 
-  bottom (y/* float */) {
+  bottom(y/* float */) {
     let h = this.height * this.getScaleY()
     this.translateY(y - h)
   }
 
-  left (x/* float */) {
+  left(x/* float */) {
     this.setX(x)
   }
 
-  right (x/* float */) {
+  right(x/* float */) {
     let w = this.width * this.getScaleX()
     this.translateX(x - w)
   }
 
-  centerX (x/* float */) {
+  centerX(x/* float */) {
     let w = this.width * this.getScaleX()
     this.translateX(x - w / 2)
   }
 
-  centerY (y/* float */) {
+  centerY(y/* float */) {
     let h = this.height * this.getScaleY()
     this.translateY(y - h / 2)
   }
 
-  setX (x/* float */) {
+  setX(x/* float */) {
     this.translateX(x)
   }
 
-  setY (y/* float */) {
+  setY(y/* float */) {
     this.translateY(y)
   }
 
-  setHeight (h/* float */) {
+  setHeight(h/* float */) {
     let scaleX = h / this.height
     let scaleY = -scaleX
     this.scale(scaleX, scaleY)
   }
 
-  setWidth (w/* float */) {
+  setWidth(w/* float */) {
     let scaleX = w / this.width
     let scaleY = -scaleX
     this.scale(scaleX, scaleY)
@@ -646,23 +647,23 @@ class L2DModelMatrix extends L2DMatrix44 {
 // ============================================================
 
 class L2DMotionManager extends MotionQueueManager { // eslint-disable-line
-  constructor () {
+  constructor() {
     super()
     this.currentPriority = null
     this.reservePriority = null
 
-        this.super = MotionQueueManager.prototype // eslint-disable-line
+    this.super = MotionQueueManager.prototype // eslint-disable-line
   }
 
-  getCurrentPriority () {
+  getCurrentPriority() {
     return this.currentPriority
   }
 
-  getReservePriority () {
+  getReservePriority() {
     return this.reservePriority
   }
 
-  reserveMotion (priority/* int */) {
+  reserveMotion(priority/* int */) {
     if (this.reservePriority >= priority) {
       return false
     }
@@ -673,19 +674,19 @@ class L2DMotionManager extends MotionQueueManager { // eslint-disable-line
     return true
   }
 
-  setReservePriority (val/* int */) {
+  setReservePriority(val/* int */) {
     this.reservePriority = val
   }
 
-  updateParam (model/* ALive2DModel */) {
-        let updated = MotionQueueManager.prototype.updateParam.call(this, model) // eslint-disable-line
+  updateParam(model/* ALive2DModel */) {
+    let updated = MotionQueueManager.prototype.updateParam.call(this, model) // eslint-disable-line
     if (this.isFinished()) {
       this.currentPriority = 0
     }
     return updated
   }
 
-  startMotionPrio (motion/* AMotion */, priority/* int */) {
+  startMotionPrio(motion/* AMotion */, priority/* int */) {
     if (priority === this.reservePriority) {
       this.reservePriority = 0
     }
@@ -709,12 +710,12 @@ class L2DMotionManager extends MotionQueueManager { // eslint-disable-line
 // ============================================================
 
 class L2DPhysics {
-  constructor () {
+  constructor() {
     this.physicsList = [] // ArrayList<PhysicsHair>
     this.startTimeMSec = UtSystem.getUserTimeMSec() // eslint-disable-line
   }
 
-  updateParam (model/* ALive2DModel */) {
+  updateParam(model/* ALive2DModel */) {
     let timeMSec = UtSystem.getUserTimeMSec() - this.startTimeMSec // eslint-disable-line
     for (let i = 0; i < this.physicsList.length; i++) {
       this.physicsList[i].update(model, timeMSec)
@@ -794,13 +795,13 @@ L2DPhysics.load = buf => {
 // ============================================================
 
 class L2DPose {
-  constructor () {
+  constructor() {
     this.lastTime = 0
     this.lastModel = null // ALive2DModel
     this.partsGroups = [] // ArrayList<L2DPartsParam[]>
   }
 
-  updateParam (model/* ALive2DModel */) {
+  updateParam(model/* ALive2DModel */) {
     if (model == null) return
 
     if (!(model === this.lastModel)) {
@@ -808,7 +809,7 @@ class L2DPose {
     }
     this.lastModel = model
 
-        let curTime = UtSystem.getUserTimeMSec() // eslint-disable-line
+    let curTime = UtSystem.getUserTimeMSec() // eslint-disable-line
     let deltaTimeSec = ((this.lastTime === 0) ? 0 : (curTime - this.lastTime) / 1000.0)
     this.lastTime = curTime
     if (deltaTimeSec < 0) deltaTimeSec = 0
@@ -818,7 +819,7 @@ class L2DPose {
     }
   }
 
-  initParam (model/* ALive2DModel */) {
+  initParam(model/* ALive2DModel */) {
     if (model == null) return
     for (let i = 0; i < this.partsGroups.length; i++) {
       let partsGroup = this.partsGroups[i] // L2DPartsParam
@@ -838,7 +839,7 @@ class L2DPose {
     }
   }
 
-  normalizePartsOpacityGroup (model/* ALive2DModel */, partsGroup/* L2DPartsParam[] */, deltaTimeSec/* float */) {
+  normalizePartsOpacityGroup(model/* ALive2DModel */, partsGroup/* L2DPartsParam[] */, deltaTimeSec/* float */) {
     let [visibleParts, visibleOpacity, CLEAR_TIME_SEC, phi, maxBackOpacity] = [-1, 1.0, 0.5, 0.5, 0.15]
     for (let i = 0; i < partsGroup.length; i++) {
       let partsIndex = partsGroup[i].partsIndex
@@ -885,7 +886,7 @@ class L2DPose {
     }
   }
 
-  copyOpacityOtherParts (model/* ALive2DModel */, partsGroup/* L2DPartsParam[] */) {
+  copyOpacityOtherParts(model/* ALive2DModel */, partsGroup/* L2DPartsParam[] */) {
     for (let i_group = 0; i_group < partsGroup.length; i_group++) {
       let partsParam = partsGroup[i_group] // L2DPartsParam
       if (partsParam.link == null) continue
@@ -936,16 +937,16 @@ L2DPose.load = buf => {
 // ============================================================
 
 class L2DPartsParam {
-  constructor (id/* String */) {
+  constructor(id/* String */) {
     this.paramIndex = -1
     this.partsIndex = -1
     this.link = null // ArrayList<L2DPartsParam>
     this.id = id
   }
 
-  initIndex (model/* ALive2DModel */) {
+  initIndex(model/* ALive2DModel */) {
     this.paramIndex = model.getParamIndex(`VISIBLE: ${this.id}`)
-        this.partsIndex = model.getPartsDataIndex(PartsDataID.getID(this.id)) // eslint-disable-line
+    this.partsIndex = model.getPartsDataIndex(PartsDataID.getID(this.id)) // eslint-disable-line
     model.setParamFloat(this.paramIndex, 1)
   }
 }
@@ -965,7 +966,7 @@ class L2DPartsParam {
 // ============================================================
 
 class L2DTargetPoint {
-  constructor () {
+  constructor() {
     this.EPSILON = 0.01 // 変化の最小値（この値以下は無視される）
     this.faceTargetX = 0
     this.faceTargetY = 0
@@ -976,35 +977,35 @@ class L2DTargetPoint {
     this.lastTimeSec = 0
   }
 
-  setPoint (x/* float */, y/* float */) {
+  setPoint(x/* float */, y/* float */) {
     this.faceTargetX = x
     this.faceTargetY = y
   }
 
-  getX () {
+  getX() {
     return this.faceX
   }
 
-  getY () {
+  getY() {
     return this.faceY
   }
 
-  update () {
+  update() {
     const TIME_TO_MAX_SPEED = 0.15
     const FACE_PARAM_MAX_V = 40.0 / 7.5
     const MAX_V = FACE_PARAM_MAX_V / L2DTargetPoint.FRAME_RATE
     if (this.lastTimeSec === 0) {
-            this.lastTimeSec = UtSystem.getUserTimeMSec() // eslint-disable-line
+      this.lastTimeSec = UtSystem.getUserTimeMSec() // eslint-disable-line
       return
     }
-        let curTimeSec = UtSystem.getUserTimeMSec() // eslint-disable-line
+    let curTimeSec = UtSystem.getUserTimeMSec() // eslint-disable-line
     let deltaTimeWeight = (curTimeSec - this.lastTimeSec) * L2DTargetPoint.FRAME_RATE / 1000.0
     this.lastTimeSec = curTimeSec
     const FRAME_TO_MAX_SPEED = TIME_TO_MAX_SPEED * L2DTargetPoint.FRAME_RATE
     const MAX_A = deltaTimeWeight * MAX_V / FRAME_TO_MAX_SPEED
     let dx = (this.faceTargetX - this.faceX)
     let dy = (this.faceTargetY - this.faceY)
-        // if(dx == 0 && dy == 0) return
+    // if(dx == 0 && dy == 0) return
     if (Math.abs(dx) <= this.EPSILON && Math.abs(dy) <= this.EPSILON) return
     let d = Math.sqrt(dx * dx + dy * dy)
     let vx = MAX_V * dx / d
@@ -1049,7 +1050,7 @@ L2DTargetPoint.FRAME_RATE = 30
 // ============================================================
 
 class L2DViewMatrix extends L2DMatrix44 {
-  constructor () {
+  constructor() {
     super()
     this.screenLeft = null
     this.screenRight = null
@@ -1063,31 +1064,31 @@ class L2DViewMatrix extends L2DMatrix44 {
     this.min = 0
   }
 
-  getMaxScale () {
+  getMaxScale() {
     return this.max
   }
 
-  getMinScale () {
+  getMinScale() {
     return this.min
   }
 
-  setMaxScale (v/* float */) {
+  setMaxScale(v/* float */) {
     this.max = v
   }
 
-  setMinScale (v/* float */) {
+  setMinScale(v/* float */) {
     this.min = v
   }
 
-  isMaxScale () {
+  isMaxScale() {
     return this.getScaleX() === this.max
   }
 
-  isMinScale () {
+  isMinScale() {
     return this.getScaleX() === this.min
   }
 
-  adjustTranslate (shiftX/* float */, shiftY/* float */) {
+  adjustTranslate(shiftX/* float */, shiftY/* float */) {
     if (this.tr[0] * this.maxLeft + (this.tr[12] + shiftX) > this.screenLeft) { shiftX = this.screenLeft - this.tr[0] * this.maxLeft - this.tr[12] }
     if (this.tr[0] * this.maxRight + (this.tr[12] + shiftX) < this.screenRight) { shiftX = this.screenRight - this.tr[0] * this.maxRight - this.tr[12] }
     if (this.tr[5] * this.maxTop + (this.tr[13] + shiftY) < this.screenTop) { shiftY = this.screenTop - this.tr[5] * this.maxTop - this.tr[13] }
@@ -1100,7 +1101,7 @@ class L2DViewMatrix extends L2DMatrix44 {
     L2DMatrix44.mul(tr1, this.tr, this.tr)
   }
 
-  adjustScale (cx/* float */, cy/* float */, scale/* float */) {
+  adjustScale(cx/* float */, cy/* float */, scale/* float */) {
     let targetScale = scale * this.tr[0]
     if (targetScale < this.min) {
       if (this.tr[0] > 0) scale = this.min / this.tr[0]
@@ -1124,49 +1125,49 @@ class L2DViewMatrix extends L2DMatrix44 {
     L2DMatrix44.mul(tr1, this.tr, this.tr)
   }
 
-  setScreenRect (left/* float */, right/* float */, bottom/* float */, top/* float */) {
+  setScreenRect(left/* float */, right/* float */, bottom/* float */, top/* float */) {
     this.screenLeft = left
     this.screenRight = right
     this.screenTop = top
     this.screenBottom = bottom
   }
 
-  setMaxScreenRect (left/* float */, right/* float */, bottom/* float */, top/* float */) {
+  setMaxScreenRect(left/* float */, right/* float */, bottom/* float */, top/* float */) {
     this.maxLeft = left
     this.maxRight = right
     this.maxTop = top
     this.maxBottom = bottom
   }
 
-  getScreenLeft () {
+  getScreenLeft() {
     return this.screenLeft
   }
 
-  getScreenRight () {
+  getScreenRight() {
     return this.screenRight
   }
 
-  getScreenBottom () {
+  getScreenBottom() {
     return this.screenBottom
   }
 
-  getScreenTop () {
+  getScreenTop() {
     return this.screenTop
   }
 
-  getMaxLeft () {
+  getMaxLeft() {
     return this.maxLeft
   }
 
-  getMaxRight () {
+  getMaxRight() {
     return this.maxRight
   }
 
-  getMaxBottom () {
+  getMaxBottom() {
     return this.maxBottom
   }
 
-  getMaxTop () {
+  getMaxTop() {
     return this.maxTop
   }
 }
@@ -1198,18 +1199,18 @@ Live2DFramework.setPlatformManager = platformManager => {
 }
 
 export {
-    L2DTargetPoint,
-    Live2DFramework,
-    L2DViewMatrix,
-    L2DPose,
-    L2DPartsParam,
-    L2DPhysics,
-    L2DMotionManager,
-    L2DModelMatrix,
-    L2DMatrix44,
-    EYE_STATE,
-    L2DEyeBlink,
-    L2DExpressionParam,
-    L2DExpressionMotion,
-    L2DBaseModel
+  L2DTargetPoint,
+  Live2DFramework,
+  L2DViewMatrix,
+  L2DPose,
+  L2DPartsParam,
+  L2DPhysics,
+  L2DMotionManager,
+  L2DModelMatrix,
+  L2DMatrix44,
+  EYE_STATE,
+  L2DEyeBlink,
+  L2DExpressionParam,
+  L2DExpressionMotion,
+  L2DBaseModel
 }

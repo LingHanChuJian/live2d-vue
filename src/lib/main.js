@@ -44,6 +44,9 @@ class L2dManage {
   }
 
   init(modelUrl) {
+    
+    if (!modelUrl) return
+
     let width = this.canvas.width
     let height = this.canvas.height
 
@@ -133,7 +136,7 @@ class L2dManage {
       link.download = window.Live2D.captureName || 'live2d.png'
       link.click()
     }
-    requestAnimationFrame(()=>this.tick())
+    requestAnimationFrame(() => this.tick())
   }
 
   changeModel(modelUrl) {
