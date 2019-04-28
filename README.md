@@ -65,7 +65,6 @@ export default {
           break
         case 'change':
           // this.$refs.l2dMange.initL2dMange('http://pjxaahzsk.bkt.clouddn.com/Pio/modelv2.json')
-          // this.modelPath = 'http://pjxaahzsk.bkt.clouddn.com/Pio/modelv2.json'
           break
         case 'save':
           window.Live2D.captureName = `live2d-${Date.now()}.png` 

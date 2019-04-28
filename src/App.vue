@@ -13,7 +13,7 @@ import custom from './custom'
 export default {
   name: 'app',
   data :()=>({
-    modelPath: 'http://pjxaahzsk.bkt.clouddn.com/Pio/model.json',
+    modelPath: 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json',
     customDialogue: custom,
     toolsData:[
       {tabMsg:'home',backgroundColor:'#ff0', show:true},
@@ -49,8 +49,7 @@ export default {
           window.open("https://github.com/LingHanChuJian/live2d-vue")
           break
         case 'change':
-          // this.$refs.l2dMange.initL2dMange('http://pjxaahzsk.bkt.clouddn.com/Pio/modelv2.json')
-          // this.modelPath = 'http://pjxaahzsk.bkt.clouddn.com/Pio/modelv2.json'
+          this.$refs.l2dMange.initL2dMange('http://127.0.0.1:8000/media/static/live2d/Pio/model.json')
           break
         case 'save':
           window.Live2D.captureName = `live2d-${Date.now()}.png` 
