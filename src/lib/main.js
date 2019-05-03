@@ -14,6 +14,7 @@ import { logError, logInfo } from './log'
 
 class L2dManage {
   constructor(el, modelUrl) {
+    this.isInit = false
     this.dragMgr = new L2DTargetPoint()
     this.viewMatrix = new L2DViewMatrix()
     this.projMatrix = new L2DMatrix44()
@@ -28,11 +29,11 @@ class L2dManage {
     this.init(modelUrl)
   }
 
-  revise(el, modelUrl){
-    this.canvas = el
-    this.gl = getWebGLContext(this.canvas)
-    setContext(this.gl)
-    this.changeModel(modelUrl)
+  revise(modelUrl) {
+    if (!this.isInit)
+      this.init(modelUrl)
+    else
+      this.changeModel(modelUrl)
   }
 
   initL2dCanvas() {
@@ -51,7 +52,7 @@ class L2dManage {
   }
 
   init(modelUrl) {
-    
+
     if (!modelUrl) return
 
     let width = this.canvas.width
@@ -92,6 +93,8 @@ class L2dManage {
     this.gl.clearColor(0.0, 0.0, 0.0, 0.0)
     this.changeModel(modelUrl)
     this.startDraw()
+
+    this.isInit = true
   }
 
   startDraw() {
