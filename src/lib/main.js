@@ -28,6 +28,12 @@ class L2dManage {
     this.init(modelUrl)
   }
 
+  revise(el, modelUrl){
+    this.canvas = el
+    this.gl = getWebGLContext(this.canvas)
+    this.changeModel(modelUrl)
+  }
+
   initL2dCanvas() {
     if (this.canvas.addEventListener) {
       // this.canvas.addEventListener("mousewheel", this.mouseEvent)

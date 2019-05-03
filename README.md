@@ -16,8 +16,8 @@ Vue.use(live2d)
 <template lang='pug'>
   div#app
     div.live2d-panel
-      dialogue(v-if="isDialogue" :customDialogue="customDialogue" ref="dialogue")
-      live2d(v-if="islive2d" :modelPath="modelPath" ref="l2dMange")
+      dialogue(v-if="isDialogue" :customDialogue="customDialogue" ref='dialogue')
+      live2d(v-if="islive2d" :modelPath="modelPath" ref='l2dMange')
     div.tools-panel
       live2dTools(v-for="(item,index) in toolsData" :key="index" v-if="item.show"  @click="toolsClick(item)" :width="item.width" :toolsID="item.tabMsg" :tabMsg="item.tabMsg" :customDialogue='item.customDialogue' :backgroundColor="item.backgroundColor" ref='tool')
 </template>
@@ -28,7 +28,7 @@ import custom from './custom'
 export default {
   name: 'app',
   data :()=>({
-    modelPath: 'http://pjxaahzsk.bkt.clouddn.com/Pio/model.json',
+    modelPath: 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json',
     customDialogue: custom,
     toolsData:[
       {tabMsg:'home',backgroundColor:'#ff0', show:true},
@@ -64,7 +64,8 @@ export default {
           window.open("https://github.com/LingHanChuJian/live2d-vue")
           break
         case 'change':
-          // this.$refs.l2dMange.initL2dMange('http://pjxaahzsk.bkt.clouddn.com/Pio/modelv2.json')
+          // this.$refs.l2dMange.initL2dMange('http://127.0.0.1:8000/media/static/live2d/Pio/model.json')
+          // this.modelPath = 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json'
           break
         case 'save':
           window.Live2D.captureName = `live2d-${Date.now()}.png` 
@@ -118,6 +119,7 @@ export default {
     left: 0
     bottom: 0
 </style>
+
 ```
 # API
 
@@ -203,7 +205,7 @@ export default {
 
 ## 关于模型
 
-[Pio目录模型参考](https://github.com/LingHanChuJian/live2d-vue/tree/master/Pio)
+[Pio目录模型参考](https://github.com/LingHanChuJian/live2d-vue/tree/master/model)
 
 如何制作 [live2d模型](https://imjad.cn/archives/lab/add-dynamic-poster-girl-with-live2d-to-your-blog-02)
 
