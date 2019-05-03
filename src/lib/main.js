@@ -31,6 +31,7 @@ class L2dManage {
   revise(el, modelUrl){
     this.canvas = el
     this.gl = getWebGLContext(this.canvas)
+    setContext(this.gl)
     this.changeModel(modelUrl)
   }
 
