@@ -205,7 +205,7 @@ export default {
 
 ## 关于模型
 
-[Pio目录模型参考](https://github.com/LingHanChuJian/live2d-vue/tree/master/model)
+[模型参考](https://github.com/LingHanChuJian/live2d-vue/tree/master/model)
 
 如何制作 [live2d模型](https://imjad.cn/archives/lab/add-dynamic-poster-girl-with-live2d-to-your-blog-02)
 
