@@ -2,9 +2,7 @@
     "version":"1.0.0",
     "model":"model.moc",
     "textures":[
-        "textures/default-costume.png",
-        "textures/jersey-costume-blue.png",
-        "textures/pajamas-costume-green.png"
+        "textures/default-costume.png"
     ],
     "layout":{
         "center_x":0.0,
