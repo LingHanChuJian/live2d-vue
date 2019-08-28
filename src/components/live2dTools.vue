@@ -68,7 +68,7 @@ export default {
         cursor: pointer
         text-align: center
         min-height: 50px
-        line-height: 35px 
+        line-height: 35px
         padding: 3px 2px
         height: auto
         box-shadow: 1px 2px 5px rgba(0,0,0,0.3)

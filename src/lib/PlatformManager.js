@@ -51,8 +51,7 @@ class PlatformManager {
     // load textures
     let loadedImage = new Image()
     loadedImage.crossOrigin = 'Anonymous'
-    loadedImage.src = path
-
+    loadedImage.src = window.live2DImgPath ? window.live2DImgPath : path
     loadedImage.onload = () => {
       // create texture
       let gl = getContext()
@@ -63,7 +62,7 @@ class PlatformManager {
         return -1
       }
       if (model.isPremultipliedAlpha() === false) {
-                // 乗算済アルファテクスチャ以外の場合
+        // 乗算済アルファテクスチャ以外の場合
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1)
       }
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
@@ -77,7 +76,7 @@ class PlatformManager {
 
       model.setTexture(no, texture)
 
-            // テクスチャオブジェクトを解放
+      // テクスチャオブジェクトを解放
       texture = null
 
       if (typeof callback === 'function') callback()

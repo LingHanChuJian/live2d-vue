@@ -50,6 +50,7 @@ export default {
           window.open("https://github.com/LingHanChuJian/live2d-vue")
           break
         case 'change':
+          // window.live2DImgPath = ''  这个是换衣服地址
           this.$refs.l2dMange.initL2dMange('http://127.0.0.1:8000/media/static/live2d/Pio/model.json')
           // this.modelPath = 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json'
           break

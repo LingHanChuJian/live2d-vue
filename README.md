@@ -28,7 +28,7 @@ import custom from './custom'
 export default {
   name: 'app',
   data :()=>({
-    modelPath: 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json',
+    modelPath: '',
     customDialogue: custom,
     toolsData:[
       {tabMsg:'home',backgroundColor:'#ff0', show:true},
@@ -55,6 +55,7 @@ export default {
           }
       })
     },30000)
+    this.modelPath = 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json'
   },
   methods:{
     toolsClick(item){
@@ -64,7 +65,8 @@ export default {
           window.open("https://github.com/LingHanChuJian/live2d-vue")
           break
         case 'change':
-          // this.$refs.l2dMange.initL2dMange('http://127.0.0.1:8000/media/static/live2d/Pio/model.json')
+          // window.live2DImgPath = ''  这个是换衣服地址
+          this.$refs.l2dMange.initL2dMange('http://127.0.0.1:8000/media/static/live2d/Pio/model.json')
           // this.modelPath = 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json'
           break
         case 'save':
