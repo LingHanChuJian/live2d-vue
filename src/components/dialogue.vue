@@ -1,9 +1,8 @@
 <template lang="pug">
-    div.dialogue-live2d(:id="dialogueID" :style="dialogueStyle")
+    div.dialogue-live2d(:id="dialogueID" :style="dialogueStyle" ref="live2dDialogue")
 </template>
 
 <script>
-import uuid from 'uuid'
 import dialogue from './../lib/dialogue'
 
 export default {
@@ -12,15 +11,12 @@ export default {
       dialogueModul:''
     }),
     props:{
-        dialogueID:{
-          type: String,
-          default: uuid()
-        },
+        dialogueID: String,
         dialogueStyle: Object,
         customDialogue: Object
     },
     mounted(){
-      this.dialogueModul = new dialogue(document.getElementById(this.dialogueID),this.customDialogue)
+      this.dialogueModul = new dialogue(this.$refs.live2dDialogue,this.customDialogue)
     },
     methods:{
       showMessage(remark,time=5000){

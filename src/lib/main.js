@@ -1,6 +1,8 @@
 import './live2d.min'
 
-import { L2DTargetPoint, L2DViewMatrix, L2DMatrix44 } from './Live2DFramework'
+import PlatformManager from './PlatformManager'
+
+import { L2DTargetPoint, L2DViewMatrix, L2DMatrix44, Live2DFramework } from './Live2DFramework'
 
 import LAppLive2DManager from './LAppLive2DManager'
 
@@ -8,23 +10,28 @@ import LAppDefine from './LAppDefine'
 
 import MatrixStack from './MatrixStack'
 
-import { setContext, getWebGLContext } from './webglcontext'
-
 import { logError, logInfo } from './log'
 
 class L2dManage {
   constructor(el, modelUrl) {
+    this.captureName = 'live2d.png'
+    this.captureFrame = false
+    this.drag = false
     this.isInit = false
+    this.isDrawStart = false
+    this.head_pos = 0.5
+    this.canvas = el
+    this.live2DNumder = Number(this.canvas.getAttribute('data-hook'))
+    this.gl = this.getWebGLContext()
     this.dragMgr = new L2DTargetPoint()
     this.viewMatrix = new L2DViewMatrix()
     this.projMatrix = new L2DMatrix44()
     this.deviceToScreen = new L2DMatrix44()
     this.live2DMgr = new LAppLive2DManager()
-    this.canvas = el
-    this.gl = getWebGLContext(this.canvas)
-    this.isDrawStart = false
-    this.drag = false
-    this.head_pos = 0.5
+
+    this.Live2DFramework = Live2DFramework.getInstance()
+    this.Live2DFramework.setPlatformManager(new PlatformManager(), this.live2DNumder)
+
     this.initL2dCanvas()
     this.init(modelUrl)
   }
@@ -36,6 +43,11 @@ class L2dManage {
       this.changeModel(modelUrl)
   }
 
+  save(captureName) {
+    this.captureName = captureName
+    this.captureFrame = true
+  }
+
   initL2dCanvas() {
     if (this.canvas.addEventListener) {
       // this.canvas.addEventListener("mousewheel", this.mouseEvent)
@@ -43,7 +55,7 @@ class L2dManage {
       window.addEventListener('mousedown', e => this.mouseEvent(e))
       window.addEventListener('mousemove', e => this.mouseEvent(e))
       window.addEventListener('mouseup', e => this.mouseEvent(e))
-      document.addEventListener('mouseout', e => this.mouseEvent(e))
+      window.addEventListener('mouseout', e => this.mouseEvent(e))
       // this.canvas.addEventListener("contextmenu", this.mouseEvent)
       window.addEventListener('touchstart', e => this.touchEvent(e))
       window.addEventListener('touchend', e => this.touchEvent(e))
@@ -64,8 +76,6 @@ class L2dManage {
     let bottom = -ratio
     let top = ratio
 
-    window.Live2D.captureFrame = false
-
     this.viewMatrix.setScreenRect(left, right, bottom, top)
 
     this.viewMatrix.setMaxScreenRect(LAppDefine.VIEW_LOGICAL_MAX_LEFT,
@@ -81,7 +91,6 @@ class L2dManage {
     this.deviceToScreen.multTranslate(-width / 2.0, -height / 2.0)
     this.deviceToScreen.multScale(2 / width, -2 / width)
 
-    setContext(this.gl)
     if (!this.gl) {
       logError('Failed to create WebGL context.')
       if (!window.WebGLRenderingContext) {
@@ -89,12 +98,25 @@ class L2dManage {
       }
       return
     }
-    window.Live2D.setGL(this.gl)
+
+    window.Live2D.setGL(this.gl, this.live2DNumder)
     this.gl.clearColor(0.0, 0.0, 0.0, 0.0)
     this.changeModel(modelUrl)
     this.startDraw()
-
     this.isInit = true
+  }
+
+  getWebGLContext() {
+    let NAMES = ['webgl', 'experimental-webgl', 'webkit-3d', 'moz-webgl']
+    for (let i = 0; i < NAMES.length; i++) {
+      try {
+        let ctx = this.canvas.getContext(NAMES[i], { premultipliedAlpha: true })
+        if (ctx) return ctx
+      } catch (e) {
+        logError(`getWebGLContext : ${e}`)
+      }
+    }
+    return null
   }
 
   startDraw() {
@@ -118,11 +140,12 @@ class L2dManage {
 
     for (let i = 0; i < this.live2DMgr.numModels(); i++) {
       let model = this.live2DMgr.getModel(i)
-
+      // console.log(this.gl.canvas.getAttribute('data-hook'), model)
       if (model == null) return
 
       if (model.initialized && !model.updating) {
-        model.update()
+        // console.log(this.gl.canvas.getAttribute('data-hook'))
+        model.update(this.gl)
         model.draw(this.gl)
       }
     }
@@ -131,19 +154,19 @@ class L2dManage {
 
   tick() {
     this.draw()
-    let requestAnimationFrame =
+    const requestAnimationFrame =
       window.requestAnimationFrame ||
       window.mozRequestAnimationFrame ||
       window.webkitRequestAnimationFrame ||
       window.msRequestAnimationFrame
 
-    if (window.Live2D.captureFrame) {
-      window.Live2D.captureFrame = false
+    if (this.captureFrame) {
+      this.captureFrame = false
       let link = document.createElement('a')
       document.body.appendChild(link)
       link.setAttribute('type', 'hidden')
       link.href = this.canvas.toDataURL()
-      link.download = window.Live2D.captureName || 'live2d.png'
+      link.download = this.captureName
       link.click()
     }
     requestAnimationFrame(() => this.tick())
@@ -238,9 +261,9 @@ class L2dManage {
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height * this.head_pos
     }, {
-        x: event.clientX,
-        y: event.clientY
-      }, rect)
+      x: event.clientX,
+      y: event.clientY
+    }, rect)
     let vx = this.transformViewX(target.x - rect.left)
     let vy = this.transformViewY(target.y - rect.top)
 
@@ -260,9 +283,9 @@ class L2dManage {
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height * this.head_pos
     }, {
-        x: event.clientX,
-        y: event.clientY
-      }, rect)
+      x: event.clientX,
+      y: event.clientY
+    }, rect)
     let vx = this.transformViewX(target.x - rect.left)
     let vy = this.transformViewY(target.y - rect.top)
 
@@ -280,9 +303,9 @@ class L2dManage {
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height * this.head_pos
     }, {
-        x: event.clientX,
-        y: event.clientY
-      }, rect)
+      x: event.clientX,
+      y: event.clientY
+    }, rect)
     let vx = this.transformViewX(target.x - rect.left)
     let vy = this.transformViewY(target.y - rect.top)
 

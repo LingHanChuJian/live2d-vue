@@ -1,5 +1,3 @@
-import { Live2DFramework } from './Live2DFramework'
-import PlatformManager from './PlatformManager'
 import LAppModel from './LAppModel'
 import LAppDefine from './LAppDefine'
 import { logInfo } from './log'
@@ -11,9 +9,6 @@ class LAppLive2DManager {
 
     this.count = -1
     this.reloadFlg = false
-
-    // Live2D.init()
-    Live2DFramework.setPlatformManager(new PlatformManager())
   }
 
   createModel () {
@@ -23,7 +18,7 @@ class LAppLive2DManager {
   }
 
   changeModel (gl, modelurl) {
-        // logInfo("--> LAppLive2DManager.update(gl)")
+    // logInfo("--> LAppLive2DManager.update(gl)")
 
     if (this.reloadFlg) {
       this.reloadFlg = false
@@ -35,14 +30,14 @@ class LAppLive2DManager {
   }
 
   getModel (no) {
-        // logInfo("--> LAppLive2DManager.getModel(" + no + ")")
+    // logInfo("--> LAppLive2DManager.getModel(" + no + ")")
 
     if (no >= this.models.length) return null
     return this.models[no]
   }
 
   releaseModel (no, gl) {
-        // logInfo("--> LAppLive2DManager.releaseModel(" + no + ")")
+    // logInfo("--> LAppLive2DManager.releaseModel(" + no + ")")
 
     if (this.models.length <= no) return
 

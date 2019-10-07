@@ -1,11 +1,10 @@
 <template lang="pug">
     a 
-        div.live2d-tools(:id="toolsID" :style='toolsStyle' v-on="toolsListeners") 
+        div.live2d-tools(:id="toolsID" :style='toolsStyle' v-on="toolsListeners" ref="live2dTools") 
             slot {{ tabMsg }}
 </template>
 
 <script>
-import uuid from 'uuid'
 import tools from './../lib/tools'
 
 export default {
@@ -27,10 +26,7 @@ export default {
             default: 'left'
        },
        customDialogue: Object,
-       toolsID:{
-           type: String,
-           default: uuid()
-       },
+       toolsID: String,
        backgroundColor:{
            type: String,
            default: '#FFFFFF'
@@ -39,7 +35,7 @@ export default {
        tabMsg: String
     },
     mounted(){
-       this.live2dTools = new tools(document.getElementById(this.toolsID),this.minWidth,this.width,this.position,this.backgroundColor,this.customDialogue)
+       this.live2dTools = new tools(this.$refs.live2dTools,this.minWidth,this.width,this.position,this.backgroundColor,this.customDialogue)
     },
     methods:{
         showMessage(remark,time=5000){

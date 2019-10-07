@@ -1,7 +1,7 @@
 {
   "name": "live2d-vue",
   "description": "live2d vue",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "LingHanChuJian",
   "license": "MIT",
   "private": false,
@@ -25,7 +25,6 @@
     "pug-plain-loader": "^1.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "uuid": "^3.3.2",
     "vue": "^2.5.17"
   },
   "devDependencies": {

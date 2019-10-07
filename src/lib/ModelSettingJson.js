@@ -1,7 +1,7 @@
 import { Live2DFramework } from './Live2DFramework'
 
 class ModelSettingJson {
-  constructor () {
+  constructor (live2DNumder) {
     this.NAME = 'name'
     this.ID = 'id'
     this.MODEL = 'model'
@@ -21,15 +21,16 @@ class ModelSettingJson {
     this.VALUE = 'val'
     this.FILE = 'file'
 
+    this.live2DNumder = live2DNumder
+
     this.json = {}
   }
 
   loadModelSetting (path, callback) {
-    let thisRef = this
-    let pm = Live2DFramework.getPlatformManager()
+    const pm = Live2DFramework.getInstance().getPlatformManager(this.live2DNumder)
     pm.loadBytes(path, buf => {
       let str = String.fromCharCode.apply(null, new Uint8Array(buf))
-      thisRef.json = JSON.parse(str)
+      this.json = JSON.parse(str)
       callback()
     })
   }

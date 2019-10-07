@@ -15,6 +15,7 @@ Vue.use(live2d)
 ```
 <template lang='pug'>
   div#app
+    live2d(v-if="islive2d" :modelPath="modelPaths" ref='l2dManges')
     div.live2d-panel
       dialogue(v-if="isDialogue" :customDialogue="customDialogue" ref='dialogue')
       live2d(v-if="islive2d" :modelPath="modelPath" ref='l2dMange')
@@ -29,6 +30,7 @@ export default {
   name: 'app',
   data :()=>({
     modelPath: '',
+    modelPaths: '',
     customDialogue: custom,
     toolsData:[
       {tabMsg:'home',backgroundColor:'#ff0', show:true},
@@ -56,6 +58,9 @@ export default {
       })
     },30000)
     this.modelPath = 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json'
+    setTimeout(()=>{
+      this.modelPaths = 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json'
+    }, 2000)
   },
   methods:{
     toolsClick(item){
@@ -65,13 +70,10 @@ export default {
           window.open("https://github.com/LingHanChuJian/live2d-vue")
           break
         case 'change':
-          // window.live2DImgPath = ''  这个是换衣服地址
-          this.$refs.l2dMange.initL2dMange('http://127.0.0.1:8000/media/static/live2d/Pio/model.json')
-          // this.modelPath = 'http://127.0.0.1:8000/media/static/live2d/Pio/model.json'
+          this.$refs.l2dMange.setImgPath('http://127.0.0.1:8000/media/static/live2d/Pio/textures/pajamas-costume.png')  //这个是换衣服地址
           break
         case 'save':
-          window.Live2D.captureName = `live2d-${Date.now()}.png` 
-          window.Live2D.captureFrame = true
+          this.$refs.l2dMange.save(`live2d-${Date.now()}.png`)
           break
         case 'about': 
           window.open("https://github.com/LingHanChuJian/live2d-vue")
@@ -134,9 +136,12 @@ export default {
 > 默认  250  
 
 #### `:canvasID`  标签ID 
-> 默认 uuid()  
+> 默认 ''
 
 #### `:modelPath`  模型JSON路径
+
+#### `:canvasStyle` canvas样式
+> 默认 {'position': 'relative','z-index': 99}
 
 ## dialogue 对话框
 
@@ -194,7 +199,7 @@ export default {
 >默认 undefined  同上 dialogue 标签
 
 #### `:toolsID` 标签ID
->单个标签 默认 uuid() 多个标签 必填
+>单个标签 默认 '' 多个标签 必填
 
 #### `:backgroundColor` 标签背景
 >默认 #FFFFFF

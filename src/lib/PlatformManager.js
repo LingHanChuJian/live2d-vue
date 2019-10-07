@@ -5,7 +5,6 @@
  *
  *  (c) Live2D Inc. All rights reserved.
  */
-import { getContext } from './webglcontext'
 import { logError } from './log'
 // ============================================================
 // ============================================================
@@ -15,7 +14,7 @@ import { logError } from './log'
 
 class PlatformManager {
   loadBytes (path/* String */, callback) {
-    let request = new XMLHttpRequest()
+    const request = new XMLHttpRequest()
     request.open('GET', path, true)
     request.responseType = 'arraybuffer'
     request.onload = () => {
@@ -38,23 +37,22 @@ class PlatformManager {
     })
   }
 
-  loadLive2DModel (path/* String */, callback) {
+  loadLive2DModel (path/* String */, gl, callback) {
     let model = null
     // load moc
     this.loadBytes(path, buf => {
-      model = Live2DModelWebGL.loadModel(buf) // eslint-disable-line
+      model = Live2DModelWebGL.loadModel(buf, Number(gl.canvas.getAttribute('data-hook'))) // eslint-disable-line
       callback(model)
     })
   }
 
-  loadTexture (model/* ALive2DModel */, no/* int */, path/* String */, callback) {
+  loadTexture (model/* ALive2DModel */, no/* int */, path/* String */,gl /*WebGL*/, callback) {
     // load textures
     let loadedImage = new Image()
     loadedImage.crossOrigin = 'Anonymous'
-    loadedImage.src = window.live2DImgPath ? window.live2DImgPath : path
+    const imgPath = gl.canvas.getAttribute('data-path')
+    loadedImage.src = imgPath ? imgPath : path
     loadedImage.onload = () => {
-      // create texture
-      let gl = getContext()
 
       let texture = gl.createTexture()
       if (!texture) {
@@ -73,7 +71,8 @@ class PlatformManager {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST)
       gl.generateMipmap(gl.TEXTURE_2D)
-
+      
+      // console.log(model.setTexture, no, texture)
       model.setTexture(no, texture)
 
       // テクスチャオブジェクトを解放

@@ -25,102 +25,97 @@ class LAppModel extends L2DBaseModel {
 
     this.modelHomeDir = modelSettingPath.substring(0, modelSettingPath.lastIndexOf('/') + 1)
 
-    this.modelSetting = new ModelSettingJson()
-
-    let thisRef = this
+    this.modelSetting = new ModelSettingJson(Number(gl.canvas.getAttribute('data-hook')))
 
     this.modelSetting.loadModelSetting(modelSettingPath, () => {
-      let path = thisRef.modelHomeDir + thisRef.modelSetting.getModelFile()
-      thisRef.loadModelData(path, () => {
-        for (let i = 0; i < thisRef.modelSetting.getTextureNum(); i++) {
+      let path = this.modelHomeDir + this.modelSetting.getModelFile()
+      this.loadModelData(path, gl, () => {
+        for (let i = 0; i < this.modelSetting.getTextureNum(); i++) {
           let texPaths
-          if (/^https?:\/\/|^\/\//i.test(thisRef.modelSetting.getTextureFile(i))) {
-            texPaths = thisRef.modelSetting.getTextureFile(i)
+          if (/^https?:\/\/|^\/\//i.test(this.modelSetting.getTextureFile(i))) {
+            texPaths = this.modelSetting.getTextureFile(i)
           } else {
-            texPaths = thisRef.modelHomeDir +
-                            thisRef.modelSetting.getTextureFile(i)
+            texPaths = this.modelHomeDir +
+                            this.modelSetting.getTextureFile(i)
           }
-          thisRef.loadTexture(i, texPaths, () => {
-            if (thisRef.isTexLoaded) {
-              if (thisRef.modelSetting.getExpressionNum() > 0) {
-                thisRef.expressions = {}
-                for (let j = 0; j < thisRef.modelSetting.getExpressionNum(); j++) {
-                  let expName = thisRef.modelSetting.getExpressionName(j)
-                  let expFilePath = thisRef.modelHomeDir +
-                                        thisRef.modelSetting.getExpressionFile(j)
-                  thisRef.loadExpression(expName, expFilePath)
+          this.loadTexture(i, texPaths, gl, () => {
+            if (this.isTexLoaded) {
+              if (this.modelSetting.getExpressionNum() > 0) {
+                this.expressions = {}
+                for (let j = 0; j < this.modelSetting.getExpressionNum(); j++) {
+                  let expName = this.modelSetting.getExpressionName(j)
+                  let expFilePath = this.modelHomeDir + this.modelSetting.getExpressionFile(j)
+                  this.loadExpression(expName, expFilePath, gl)
                 }
               } else {
-                thisRef.expressionManager = null
-                thisRef.expressions = {}
+                this.expressionManager = null
+                this.expressions = {}
               }
 
-                            // if (thisRef.eyeBlink == null) {
-                            //     thisRef.eyeBlink = new L2DEyeBlink()
-                            // }
+              // if (this.eyeBlink == null) {
+              //     this.eyeBlink = new L2DEyeBlink()
+              // }
 
-              if (thisRef.modelSetting.getPhysicsFile() != null) {
-                thisRef.loadPhysics(thisRef.modelHomeDir +
-                                    thisRef.modelSetting.getPhysicsFile())
+              if (this.modelSetting.getPhysicsFile() != null) {
+                this.loadPhysics(this.modelHomeDir + this.modelSetting.getPhysicsFile(), gl)
               } else {
-                thisRef.physics = null
+                this.physics = null
               }
 
-              if (thisRef.modelSetting.getPoseFile() != null) {
-                thisRef.loadPose(thisRef.modelHomeDir + thisRef.modelSetting.getPoseFile(), () => {
-                  thisRef.pose.updateParam(thisRef.live2DModel)
-                }
-                                )
+              if (this.modelSetting.getPoseFile() != null) {
+                this.loadPose(this.modelHomeDir + this.modelSetting.getPoseFile(), gl, () => {
+                  this.pose.updateParam(this.live2DModel)
+                })
               } else {
-                thisRef.pose = null
+                this.pose = null
               }
 
-              if (thisRef.modelSetting.getLayout() != null) {
-                let layout = thisRef.modelSetting.getLayout()
-                if (layout['width'] != null) { thisRef.modelMatrix.setWidth(layout['width']) }
-                if (layout['height'] != null) { thisRef.modelMatrix.setHeight(layout['height']) }
+              if (this.modelSetting.getLayout() != null) {
+                let layout = this.modelSetting.getLayout()
+                if (layout['width'] != null) { this.modelMatrix.setWidth(layout['width']) }
+                if (layout['height'] != null) { this.modelMatrix.setHeight(layout['height']) }
 
-                if (layout['x'] != null) { thisRef.modelMatrix.setX(layout['x']) }
-                if (layout['y'] != null) { thisRef.modelMatrix.setY(layout['y']) }
-                if (layout['center_x'] != null) { thisRef.modelMatrix.centerX(layout['center_x']) }
-                if (layout['center_y'] != null) { thisRef.modelMatrix.centerY(layout['center_y']) }
-                if (layout['top'] != null) { thisRef.modelMatrix.top(layout['top']) }
-                if (layout['bottom'] != null) { thisRef.modelMatrix.bottom(layout['bottom']) }
-                if (layout['left'] != null) { thisRef.modelMatrix.left(layout['left']) }
-                if (layout['right'] != null) { thisRef.modelMatrix.right(layout['right']) }
+                if (layout['x'] != null) { this.modelMatrix.setX(layout['x']) }
+                if (layout['y'] != null) { this.modelMatrix.setY(layout['y']) }
+                if (layout['center_x'] != null) { this.modelMatrix.centerX(layout['center_x']) }
+                if (layout['center_y'] != null) { this.modelMatrix.centerY(layout['center_y']) }
+                if (layout['top'] != null) { this.modelMatrix.top(layout['top']) }
+                if (layout['bottom'] != null) { this.modelMatrix.bottom(layout['bottom']) }
+                if (layout['left'] != null) { this.modelMatrix.left(layout['left']) }
+                if (layout['right'] != null) { this.modelMatrix.right(layout['right']) }
               }
 
-              if (thisRef.modelSetting.getHitAreasCustom() != null) {
-                let hit_areas_custom = thisRef.modelSetting.getHitAreasCustom()
+              if (this.modelSetting.getHitAreasCustom() != null) {
+                let hit_areas_custom = this.modelSetting.getHitAreasCustom()
                 if (hit_areas_custom['head_x'] != null) { LAppDefine.hit_areas_custom_head_x = hit_areas_custom['head_x'] }
                 if (hit_areas_custom['head_y'] != null) { LAppDefine.hit_areas_custom_head_y = hit_areas_custom['head_y'] }
                 if (hit_areas_custom['body_x'] != null) { LAppDefine.hit_areas_custom_body_x = hit_areas_custom['body_x'] }
                 if (hit_areas_custom['body_y'] != null) { LAppDefine.hit_areas_custom_body_y = hit_areas_custom['body_y'] }
               }
 
-              for (let j = 0; j < thisRef.modelSetting.getInitParamNum(); j++) {
-                thisRef.live2DModel.setParamFloat(
-                                    thisRef.modelSetting.getInitParamID(j),
-                                    thisRef.modelSetting.getInitParamValue(j)
+              for (let j = 0; j < this.modelSetting.getInitParamNum(); j++) {
+                this.live2DModel.setParamFloat(
+                                    this.modelSetting.getInitParamID(j),
+                                    this.modelSetting.getInitParamValue(j)
                                 )
               }
 
-              for (let k = 0; k < thisRef.modelSetting.getInitPartsVisibleNum(); k++) {
-                thisRef.live2DModel.setPartsOpacity(
-                                    thisRef.modelSetting.getInitPartsVisibleID(k),
-                                    thisRef.modelSetting.getInitPartsVisibleValue(k)
+              for (let k = 0; k < this.modelSetting.getInitPartsVisibleNum(); k++) {
+                this.live2DModel.setPartsOpacity(
+                                    this.modelSetting.getInitPartsVisibleID(k),
+                                    this.modelSetting.getInitPartsVisibleValue(k)
                                 )
               }
 
-              thisRef.live2DModel.saveParam()
-                            // thisRef.live2DModel.setGL(gl)
+              this.live2DModel.saveParam()
+                            // this.live2DModel.setGL(gl)
 
-              thisRef.preloadMotionGroup(LAppDefine.MOTION_GROUP_IDLE)
-              thisRef.preloadMotionGroup(LAppDefine.MOTION_GROUP_SLEEPY)
-              thisRef.mainMotionManager.stopAllMotions()
+              this.preloadMotionGroup(LAppDefine.MOTION_GROUP_IDLE, gl)
+              this.preloadMotionGroup(LAppDefine.MOTION_GROUP_SLEEPY, gl)
+              this.mainMotionManager.stopAllMotions()
 
-              thisRef.setUpdating(false)
-              thisRef.setInitialized(true)
+              this.setUpdating(false)
+              this.setInitialized(true)
 
               if (typeof callback === 'function') callback()
             }
@@ -131,40 +126,39 @@ class LAppModel extends L2DBaseModel {
   }
 
   release (gl) {
-        // this.live2DModel.deleteTextures()
-    let pm = Live2DFramework.getPlatformManager()
+    // this.live2DModel.deleteTextures()
+    let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook')))
     gl.deleteTexture(pm.texture)
   }
 
-  preloadMotionGroup (name) {
-    let thisRef = this
+  preloadMotionGroup (name, gl) {
     for (let i = 0; i < this.modelSetting.getMotionNum(name); i++) {
       let file = this.modelSetting.getMotionFile(name, i)
-      this.loadMotion(file, this.modelHomeDir + file, motion => {
-        motion.setFadeIn(thisRef.modelSetting.getMotionFadeIn(name, i))
-        motion.setFadeOut(thisRef.modelSetting.getMotionFadeOut(name, i))
+      this.loadMotion(file, this.modelHomeDir + file, gl, motion => {
+        motion.setFadeIn(this.modelSetting.getMotionFadeIn(name, i))
+        motion.setFadeOut(this.modelSetting.getMotionFadeOut(name, i))
       })
     }
   }
 
-  update () {
-        // logInfo("--> LAppModel.update()")
+  update (gl) {
+    // logInfo("--> LAppModel.update()")
 
     if (this.live2DModel == null) {
       if (LAppDefine.DEBUG_LOG) logError('Failed to update.')
       return
     }
 
-        let timeMSec = UtSystem.getUserTimeMSec() - this.startTimeMSec // eslint-disable-line
+    let timeMSec = UtSystem.getUserTimeMSec() - this.startTimeMSec // eslint-disable-line
     let timeSec = timeMSec / 1000.0
     let t = timeSec * 2 * Math.PI
 
     if (this.mainMotionManager.isFinished()) {
       let Sleepy = sessionStorage.getItem('Sleepy')
       if (Sleepy === '1') {
-        this.startRandomMotion(LAppDefine.MOTION_GROUP_SLEEPY, LAppDefine.PRIORITY_SLEEPY)
+        this.startRandomMotion(LAppDefine.MOTION_GROUP_SLEEPY, LAppDefine.PRIORITY_SLEEPY, gl)
       } else {
-        this.startRandomMotion(LAppDefine.MOTION_GROUP_IDLE, LAppDefine.PRIORITY_IDLE)
+        this.startRandomMotion(LAppDefine.MOTION_GROUP_IDLE, LAppDefine.PRIORITY_IDLE, gl)
       }
     }
 
@@ -230,18 +224,18 @@ class LAppModel extends L2DBaseModel {
     this.setExpression(tmp[no])
   }
 
-  startRandomMotion (name, priority) {
+  startRandomMotion (name, priority, gl) {
     let max = this.modelSetting.getMotionNum(name)
     let no = parseInt(Math.random() * max)
-    this.startMotion(name, no, priority)
+    this.startMotion(name, no, priority, gl)
   }
 
-  startMotion (name, no, priority) {
-        // logInfo(`startMotion : ${name} ${no} ${priority}`)
-
+  startMotion (name, no, priority, gl) {
+    // logInfo(`startMotion : ${name} ${no} ${priority}`)
+    
     let motionName = this.modelSetting.getMotionFile(name, no)
 
-    if (motionName == null || motionName === '') {
+    if (motionName === null || motionName === '') {
       if (LAppDefine.DEBUG_LOG) { logError('Failed to motion.') }
       return
     }
@@ -253,17 +247,15 @@ class LAppModel extends L2DBaseModel {
       return
     }
 
-    let thisRef = this
     let motion
-
     if (this.motions[name] == null) {
-      this.loadMotion(null, this.modelHomeDir + motionName, mtn => {
+      this.loadMotion(null, this.modelHomeDir + motionName, gl, mtn => {
         motion = mtn
-        thisRef.setFadeInFadeOut(name, no, priority, motion)
+        this.setFadeInFadeOut(name, no, priority, motion)
       })
     } else {
       motion = this.motions[name]
-      thisRef.setFadeInFadeOut(name, no, priority, motion)
+      this.setFadeInFadeOut(name, no, priority, motion)
     }
   }
 
@@ -300,9 +292,9 @@ class LAppModel extends L2DBaseModel {
   }
 
   draw () {
-        // logInfo("--> LAppModel.draw()")
+    // logInfo("--> LAppModel.draw()")
 
-        // if(this.live2DModel == null) return
+    if(this.live2DModel == null) return
 
     MatrixStack.push()
 

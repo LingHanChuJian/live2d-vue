@@ -101,19 +101,18 @@ class L2DBaseModel {
     return this.expressionManager
   }
 
-  loadModelData(path/* String */, callback) {
+  loadModelData(path/* String */, gl /* webGL */, callback) {
     /*
         if( this.live2DModel != null ) {
             this.live2DModel.deleteTextures();
         }
     */
-    let pm = Live2DFramework.getPlatformManager() // IPlatformManager
+    let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook'))) // IPlatformManager
     if (this.debugMode) pm.log(`Load model : ${path}`)
 
-    let thisRef = this
-    pm.loadLive2DModel(path, l2dModel => {
-      thisRef.live2DModel = l2dModel
-      thisRef.live2DModel.saveParam()
+    pm.loadLive2DModel(path, gl, l2dModel => {
+      this.live2DModel = l2dModel
+      this.live2DModel.saveParam()
 
       let _err = Live2D.getError() // eslint-disable-line
 
@@ -122,68 +121,66 @@ class L2DBaseModel {
         return
       }
 
-      thisRef.modelMatrix = new L2DModelMatrix(
-        thisRef.live2DModel.getCanvasWidth(),
-        thisRef.live2DModel.getCanvasHeight()) // L2DModelMatrix
-      thisRef.modelMatrix.setWidth(2)
-      thisRef.modelMatrix.setCenterPosition(0, 0)
-      callback(thisRef.live2DModel)
+      this.modelMatrix = new L2DModelMatrix(
+        this.live2DModel.getCanvasWidth(),
+        this.live2DModel.getCanvasHeight()) // L2DModelMatrix
+      this.modelMatrix.setWidth(2)
+      this.modelMatrix.setCenterPosition(0, 0)
+      callback(this.live2DModel)
     })
   }
 
-  loadTexture(no/* int */, path/* String */, callback) {
+  loadTexture(no/* int */, path/* String */, gl /* WebGL */, callback) {
     texCounter++
 
-    let pm = Live2DFramework.getPlatformManager() // IPlatformManager
+    let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook'))) // IPlatformManager
 
     if (this.debugMode) pm.log(`Load Texture : ${path}`)
 
-    let thisRef = this
-    pm.loadTexture(this.live2DModel, no, path, () => {
+    pm.loadTexture(this.live2DModel, no, path, gl, () => {
       texCounter--
-      if (texCounter === 0) thisRef.isTexLoaded = true
+      if (texCounter === 0) this.isTexLoaded = true
       if (typeof callback === 'function') callback()
     })
   }
 
-  loadMotion(name/* String */, path /* String */, callback) {
-    let pm = Live2DFramework.getPlatformManager() // IPlatformManager
+  loadMotion(name/* String */, path /* String */, gl, callback) {
+    const live2DNumder = Number(gl.canvas.getAttribute('data-hook'))
+    let pm = Live2DFramework.getInstance().getPlatformManager(live2DNumder) // IPlatformManager
 
     if (this.debugMode) pm.log(`Load Motion : ${path}`)
 
     let motion = null // Live2DMotion
 
-    let thisRef = this
     pm.loadBytes(path, buf => {
       motion = Live2DMotion.loadMotion(buf) // eslint-disable-line
       if (name != null) {
-        thisRef.motions[name] = motion
+        this.motions[name] = motion
       }
       callback(motion)
     })
   }
 
-  loadExpression(name/* String */, path /* String */, callback) {
-    let pm = Live2DFramework.getPlatformManager() // IPlatformManager
+  loadExpression(name/* String */, path /* String */, gl /* webGL */, callback) {
+    let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook'))) // IPlatformManager
 
     if (this.debugMode) pm.log(`Load Expression : ${path}`)
 
-    let thisRef = this
     pm.loadBytes(path, buf => {
       if (name != null) {
-        thisRef.expressions[name] = L2DExpressionMotion.loadJson(buf)
+        this.expressions[name] = L2DExpressionMotion.loadJson(buf, gl)
       }
       if (typeof callback === 'function') callback()
     })
   }
 
-  loadPose(path /* String */, callback) {
-    let pm = Live2DFramework.getPlatformManager() // IPlatformManager
+  loadPose(path /* String */, gl, callback) {
+    let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook'))) // IPlatformManager
     if (this.debugMode) pm.log(`Load Pose : ${path}`)
-    let thisRef = this
+
     try {
       pm.loadBytes(path, buf => {
-        thisRef.pose = L2DPose.load(buf)
+        this.pose = L2DPose.load(buf)
         if (typeof callback === 'function') callback()
       })
     } catch (e) {
@@ -191,13 +188,13 @@ class L2DBaseModel {
     }
   }
 
-  loadPhysics(path/* String */) {
-    let pm = Live2DFramework.getPlatformManager() // IPlatformManager
+  loadPhysics(path/* String */, gl) {
+    let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook'))) // IPlatformManager
     if (this.debugMode) pm.log(`Load Physics : ${path}`)
-    let thisRef = this
+
     try {
       pm.loadBytes(path, buf => {
-        thisRef.physics = L2DPhysics.load(buf)
+        this.physics = L2DPhysics.load(buf, gl)
       })
     } catch (e) {
       logWarn(e)
@@ -277,9 +274,9 @@ L2DExpressionMotion.TYPE_SET = 0
 L2DExpressionMotion.TYPE_ADD = 1
 L2DExpressionMotion.TYPE_MULT = 2
 
-L2DExpressionMotion.loadJson = buf => {
+L2DExpressionMotion.loadJson = (buf, gl) => {
   let ret = new L2DExpressionMotion()
-  let pm = Live2DFramework.getPlatformManager()
+  let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook')))
   let json = pm.jsonParseFromBytes(buf)
 
   ret.setFadeIn(parseInt(json.fade_in) > 0 ? parseInt(json.fade_in) : 1000)
@@ -723,9 +720,9 @@ class L2DPhysics {
   }
 }
 
-L2DPhysics.load = buf => {
+L2DPhysics.load = (buf, gl) => {
   let ret = new L2DPhysics() // L2DPhysicsL2DPhysics
-  let pm = Live2DFramework.getPlatformManager()
+  let pm = Live2DFramework.getInstance().getPlatformManager(Number(gl.canvas.getAttribute('data-hook')))
   let json = pm.jsonParseFromBytes(buf)
   let params = json.physics_hair
   let paramNum = params.length
@@ -1186,17 +1183,40 @@ class L2DViewMatrix extends L2DMatrix44 {
 // ============================================================
 // ============================================================
 
-class Live2DFramework { }
+class Live2DFramework {
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new Live2DFramework()
+    }
+    return this.instance
+  }
 
-Live2DFramework.platformManager = null
+  constructor() {
+    this.allPlatformManager = []
+  }
 
-Live2DFramework.getPlatformManager = () => {
-  return Live2DFramework.platformManager
+  setPlatformManager(platformManager, live2DNumder) {
+    this.allPlatformManager[live2DNumder] = platformManager
+  }
+
+  getPlatformManager(live2DNumder) {
+    return this.allPlatformManager[live2DNumder]
+  }
+
+  getAllPlatformManager() {
+    return this.allPlatformManager
+  }
 }
 
-Live2DFramework.setPlatformManager = platformManager => {
-  Live2DFramework.platformManager = platformManager
-}
+// Live2DFramework.platformManager = null
+
+// Live2DFramework.getPlatformManager = () => {
+//   return Live2DFramework.platformManager
+// }
+
+// Live2DFramework.setPlatformManager = platformManager => {
+//   Live2DFramework.platformManager = platformManager
+// }
 
 export {
   L2DTargetPoint,
