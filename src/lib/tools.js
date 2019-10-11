@@ -1,12 +1,13 @@
 import message from './message'
 
 class tools {
-    constructor(el, minWidth, width, position, backgroundColor, customDialogue) {
+    constructor(el, minWidth, width, position, backgroundColor, customDialogue, dialogueRightLevelPosition) {
         this.parent = el
         this.control = ''
         this.width = width
         this.minWidth = minWidth
         this.position = position
+        this.dialogueRightLevelPosition = dialogueRightLevelPosition
         this.parent.style.width = `${width}px`
         this.parent.style.backgroundColor = backgroundColor
         if (!customDialogue) {
@@ -27,7 +28,7 @@ class tools {
                 this.parent.style.transform = `translateX(${-Math.abs(this.minWidth - this.width)}px)`
                 break
             case 'right':
-                this.parent.style.transform = `translateX(${Math.abs(this.minWidth - this.width)}px) rotate(180deg)`
+                this.parent.style.transform = `translateX(${this.customDialogue ? this.dialogueRightLevelPosition : Math.abs(this.minWidth - this.width)}px) rotate(180deg)`
                 break
         }
         if (this.customDialogue) {
@@ -35,6 +36,8 @@ class tools {
             this.parent.style.fontSize = '13px'
             this.parent.style.writingMode = 'initial'
             this.parent.style.lineHeight = '20px'
+            this.parent.style.display = this.position === 'right' ? 'inline-flex' : 'inline-block'
+            this.parent.style.justifyContent = this.position === 'right' ? 'center' : 'flex-start'
         }
     }
 
@@ -51,7 +54,7 @@ class tools {
                 this.parent.style.transform = 'translateX(0)'
                 break
             case 'right':
-                this.parent.style.transform = 'translateX(0) rotate(180deg)'
+                this.parent.style.transform = `translateX(${ this.customDialogue ? -Math.abs(this.minWidth - this.width) + this.dialogueRightLevelPosition : '0'}px) rotate(180deg)`
                 break
         }
     }
@@ -73,8 +76,8 @@ class tools {
         this.clearTimer()
         if (Array.isArray(message))
             message = message[this.message.randomInteger(message.length - 1)]
-        if(this.parent.style.fontSize)
-        this.parent.innerHTML = this.createElementStr(message)
+        if (this.parent.style.fontSize)
+            this.parent.innerHTML = this.createElementStr(message)
         this.showHover()
     }
 
@@ -84,14 +87,14 @@ class tools {
     }
 
     clearTimer() {
-        if(this.control){
+        if (this.control) {
             clearTimeout(this.control)
             this.control = ''
         }
     }
 
-    createElementStr(message){
-        return `<div style="text-align: left;display: inline-block;">${message}</div>`
+    createElementStr(message) {
+        return `<div style="text-align: left;display: inline-block; ${this.position === 'right' ? 'transform: rotate(180deg);' : ''}">${message}</div>`
     }
 }
 

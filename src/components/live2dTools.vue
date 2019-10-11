@@ -1,7 +1,8 @@
 <template lang="pug">
     a 
         div.live2d-tools(:id="toolsID" :style='toolsStyle' v-on="toolsListeners" ref="live2dTools") 
-            slot {{ tabMsg }}
+            slot 
+                span(:class="{ 'right-msg': position === 'right' }") {{ tabMsg }}
 </template>
 
 <script>
@@ -18,8 +19,12 @@ export default {
            default: 28
        },
        minWidth:{
-           typr: Number,
+           type: Number,
            default: 18
+       },
+       dialogueRightLevelPosition: {
+           type: Number,
+           default: 10
        },
        position:{
             type: String,
@@ -35,7 +40,7 @@ export default {
        tabMsg: String
     },
     mounted(){
-       this.live2dTools = new tools(this.$refs.live2dTools,this.minWidth,this.width,this.position,this.backgroundColor,this.customDialogue)
+       this.live2dTools = new tools(this.$refs.live2dTools, this.minWidth, this.width, this.position, this.backgroundColor, this.customDialogue, this.dialogueRightLevelPosition)
     },
     methods:{
         showMessage(remark,time=5000){
@@ -59,17 +64,20 @@ export default {
 
 <style lang="stylus" scoped>
     .live2d-tools
-        margin: 2px 0 
-        writing-mode: vertical-lr
-        cursor: pointer
-        text-align: center
-        min-height: 50px
-        line-height: 35px
-        padding: 3px 2px
-        height: auto
-        box-shadow: 1px 2px 5px rgba(0,0,0,0.3)
-        background-color: #FFFFFF  
-        transition: all .2s
-        border-top-right-radius: 8px
-        border-bottom-right-radius: 8px 
+        margin 2px 0 
+        writing-mode vertical-lr
+        cursor pointer
+        text-align center
+        min-height 50px
+        line-height 35px
+        padding 3px 2px
+        height auto
+        box-shadow 1px 2px 5px rgba(0,0,0,0.3)
+        background-color #FFFFFF  
+        transition all .2s
+        border-top-right-radius 8px
+        border-bottom-right-radius 8px
+    .right-msg
+        display inline-block
+        transform rotate(180deg)
 </style>

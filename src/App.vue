@@ -5,7 +5,7 @@
       dialogue(v-if="isDialogue" :customDialogue="customDialogue" ref='dialogue')
       live2d(v-if="islive2d" :modelPath="modelPath" ref='l2dMange')
     div.tools-panel
-      live2dTools(v-for="(item,index) in toolsData" :key="index" v-if="item.show"  @click="toolsClick(item)" :width="item.width" :toolsID="item.tabMsg" :tabMsg="item.tabMsg" :customDialogue='item.customDialogue' :backgroundColor="item.backgroundColor" ref='tool')
+      live2dTools(v-for="(item,index) in toolsData" :key="index" v-if="item.show" :position="item.position" @click="toolsClick(item)" :width="item.width" :toolsID="item.tabMsg" :tabMsg="item.tabMsg" :customDialogue='item.customDialogue' :backgroundColor="item.backgroundColor" ref='tool')
 </template>
 
 <script>
@@ -18,12 +18,12 @@ export default {
     modelPaths: '',
     customDialogue: custom,
     toolsData:[
-      {tabMsg:'home',backgroundColor:'#ff0', show:true},
-      {tabMsg:'dialogue', width: 280, customDialogue: custom, show:true},
-      {tabMsg:'change',backgroundColor:'#add8e6', show:true},
-      {tabMsg:'save',backgroundColor:'green', show:true},
-      {tabMsg:'about',backgroundColor:'#eb7a77', show:true},
-      {tabMsg:'hide',backgroundColor:'red', show:true}
+      {tabMsg:'home',backgroundColor:'#ff0', show:true, position: 'left'},
+      {tabMsg:'dialogue', width: 280, customDialogue: custom, show:true, position: 'left'},
+      {tabMsg:'change',backgroundColor:'#add8e6', show:true, position: 'left'},
+      {tabMsg:'save',backgroundColor:'green', show:true, position: 'left'},
+      {tabMsg:'about',backgroundColor:'#eb7a77', show:true, position: 'left'},
+      {tabMsg:'hide',backgroundColor:'red', show:true, position: 'left'}
     ],
     islive2d: true,
     isDialogue: false
@@ -97,14 +97,14 @@ export default {
 
 <style lang="stylus" scoped>
   #app
-    position: relative
+    position relative
   .tools-panel
-    position: fixed
-    left: 0
-    bottom: 0
-    max-width: 32px
+    position fixed
+    left 0
+    bottom 0
+    max-width 32px
   .live2d-panel
-    position: fixed
+    position fixed
     left: 0
     bottom: 0
 </style>
